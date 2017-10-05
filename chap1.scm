@@ -98,3 +98,92 @@ m
 (testcr (/ 1.0 100000000000000))
 
 (testcr 60000000000000)
+
+					;---
+
+
+(define (root r x)
+  
+  (define (average x y)
+    (/ (+ x y) 2))
+  
+  (define (improve guess)
+    (cond ((= r 2)
+	   (average guess (/ x guess)))
+	  ((= r 3)
+	   (/ (+ (/ x (square guess)) (* 2 guess)) 3))))
+
+  (define (good-enough? guess)
+    (< (abs (- (improve guess) guess)) (/ guess (expt 10 100))))
+
+  (define (root-loop guess)
+    (if (good-enough? guess)
+	guess
+	(root-loop (improve guess))))
+
+  (root-loop 1.0))
+
+(root 2 25)
+(root 2 4)
+(root 2 2)
+(root 2 (expt 52525 2))
+
+(root 3 8)
+(root 3 125)
+(root 3 2)
+(root 3 (expt 12345 3))
+
+
+
+
+					;-- Exercise 1.9
+
+(define (inc x)
+  (+ x 1))
+
+(define (dec x)
+  (- x 1))
+
+
+(define (add_1 a b)
+  (if (= a 0)
+      b
+      (inc (+ (dec a) b)))) ; ((a-1) + b) + 1
+
+#|
+a,b = 4,5
+(inc (+ (dec 4) 5))
+(inc (+ (- 4 1) 5))
+(inc (+ 3 5))
+(inc 8)
+(+ 8 1)
+9
+|#
+
+
+
+(define (add_2 a b)
+  (if (= a 0)
+      b
+      (+ (dec a) (inc b)))) ; (a-1) + (b+1)
+
+#|
+(+ (dec 4) (inc 5))
+(+ (- 4 1) (+ 5 1))
+(+ 3 6)
+9
+|#
+
+
+;--- Exercise 1.10
+
+(define (A x y)
+  (cond ((= y 0) 0)
+	((= x 0) (* 2 y))
+	((= y 1) 2)
+	(else (A (- x 1)
+		 (A x (- y 1))))))
+
+(A 1 10) ;=1024, 2^10
+(A 2 4)  ;=65536, 2^16, 4^8    2a^ab
+(A 3 3)  ;=65536, 2^16
